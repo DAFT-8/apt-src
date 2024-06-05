@@ -2,12 +2,6 @@
 
 command -v apt >/dev/null 2>&1 || { echo >&2 "This script only works on Debian."; exit 1; }
 
-if [ "$EUID" -ne 0 ]; then
-	command -v sudo >/dev/null 2>&1 && echo "This script must be run as root. Use 'sudo' or run it as root."
-	command -v doas >/dev/null 2>&1 && echo "This script must be run as root. Use 'doas' or run it as root."
-	exit 1
-fi
-
 install() {
     if [ $# -lt 2 ]; then
 	echo "Usage: apt-src install <package>"
@@ -15,7 +9,7 @@ install() {
     fi
 	[[ -d /tmp/apt-src ]] || mkdir /tmp/apt-src
 	cd /tmp/apt-src
-	apt source install --build "$2" || apt build-dep -yy "$2" && apt source install --build "$2" && dpkg -i "$2"*.deb && echo -e "Package: $2 installed." || echo -e >&2 "Error: $2 is not installed."
+	apt source install --build "$2" || sudo apt build-dep -yy "$2" && apt source install --build "$2" && sudo dpkg -i "$2"*.deb && echo -e "Package: $2 installed." || echo -e >&2 "Error: $2 is not installed."
 }
 
 case "$1" in
