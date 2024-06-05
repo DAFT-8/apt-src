@@ -1,2 +1,2 @@
 # apt-src
-apt source helper script
+apt source helper script written in shell
