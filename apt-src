@@ -9,7 +9,7 @@ install() {
     fi
 	[[ -d /tmp/apt-src ]] || mkdir /tmp/apt-src
 	cd /tmp/apt-src
-	apt source install --build "$2" || sudo apt build-dep -yy "$2" && apt source install --build "$2" && sudo dpkg -i "$2"*.deb && echo -e "Package: $2 is installed." || echo -e >&2 "Error: Package $2 is not installed."
+	apt source --build "$2" || sudo apt build-dep -yy "$2" && apt source --build "$2" && sudo dpkg -i "$2"*.deb && echo -e "Package: $2 is installed." || echo -e >&2 "Error: Package $2 is not installed."
 }
 
 case "$1" in
