@@ -1,10 +1,12 @@
 #!/bin/bash
 
+set -e
+
 command -v dpkg >/dev/null 2>&1 || { echo >&2 "This script only works on Debian."; exit 1; }
 
 install() {
     if [ $# -ne 2 ]; then
-	echo "Usage: apt-src install <package>"
+	echo -e "Usage: apt-src install <package>"
         exit 1
     fi
 	[[ -d /tmp/apt-src ]] || mkdir /tmp/apt-src
@@ -17,10 +19,9 @@ case "$1" in
         install "$@"
         ;;
     *)
-	echo "Usage: apt-src install <package>"
-	echo "Example: apt-src install hello"
-	exit 1
+	[[ -d /tmp/apt-src ]] || mkdir /tmp/apt-src
+	cd /tmp/apt-src
+	apt source "$1" && sudo apt build-dep -yy "$1" && echo -e "Package: $1 is downloaded and located at /tmp/apt-src/ ." || echo -e >&2 "Error: Package $1 is not downloaded."
+	echo -e "Usage: apt-src install $1"
         ;;
 esac
-
-exit
